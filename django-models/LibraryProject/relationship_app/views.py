@@ -44,3 +44,10 @@ def is_admin(user):
 @user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin.html')
+
+def is_librarian(user):
+    return user.is_authenticated and user.groups.filter(name='Librarian').exists()
+
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
