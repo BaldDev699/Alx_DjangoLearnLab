@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.views.generic import CreateView
 from django.contrib.auth import login
+from django.contrib.auth.decorators import user_passes_test
 
 # Create your views here.
 def list_books (request):
@@ -36,3 +37,7 @@ class LoginView(CreateView):
 class LogoutView(CreateView):
     model = User
     template_name = 'relationship_app/logout.html'
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_view(request):
+    return render(request, 'relationship_app/admin.html')
