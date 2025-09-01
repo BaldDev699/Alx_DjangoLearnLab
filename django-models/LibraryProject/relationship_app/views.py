@@ -38,6 +38,9 @@ class LogoutView(CreateView):
     model = User
     template_name = 'relationship_app/logout.html'
 
-@user_passes_test(lambda u: u.is_superuser)
+def is_admin(user):
+    return user.is_authenticated and user.groups.filter(name='Admin').exists()
+
+@user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin.html')
