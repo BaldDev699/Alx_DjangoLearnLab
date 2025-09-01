@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.views.generic import CreateView
+from django.contrib.auth import login
 
 # Create your views here.
 def list_books (request):
