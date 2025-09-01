@@ -9,5 +9,5 @@ def list_books (request):
 
 class LibraryListView(ListView):
     model = Library
-    template_name = 'relationship_app/list_libraries.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'libraries'
