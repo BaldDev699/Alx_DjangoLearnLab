@@ -19,7 +19,7 @@ class LibraryDetailView(DetailView):
 
 class SignUpView(CreateView):
     model = User
-    template_name = 'relationship_app/signup.html'
+    template_name = 'relationship_app/register.html'
     form_class = UserCreationForm
 
 class LoginView(CreateView):
