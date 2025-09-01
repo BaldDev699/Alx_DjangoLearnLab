@@ -7,7 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.views.generic import CreateView
 from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 def list_books (request):
@@ -69,3 +70,5 @@ def add_book(request):
     else:
         form = BookForm()
     return render(request, 'relationship_app/add_book.html', {'form': form})
+
+
