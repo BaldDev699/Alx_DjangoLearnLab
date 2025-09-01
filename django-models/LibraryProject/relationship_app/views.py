@@ -82,3 +82,11 @@ def edit_book(request, pk):
     else:
         form = BookForm(instance=book)
     return render(request, 'relationship_app/change_book.html', {'form': form})
+
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, pk):
+    book = Book.objects.get(id=pk)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('list_books')
+    return render(request, 'relationship_app/delete_book.html', {'book': book})
