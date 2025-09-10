@@ -27,7 +27,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(username, email, password, **extra_fields)
 
-class Article(models.Model):
+class Book(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
