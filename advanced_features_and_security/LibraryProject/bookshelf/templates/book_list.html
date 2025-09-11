@@ -1,0 +1,21 @@
+{% for book in books %}
+  <h2>{{ book.title }}</h2>
+  <p>Author: {{ book.author }}</p>
+  <p>Published Date: {{ book.published_date }}</p>
+  <p>ISBN: {{ book.isbn }}</p>
+  <p>Pages: {{ book.pages }}</p>
+  <p>Cover URL: {{ book.cover_url }}</p>
+  <p>Language: {{ book.language }}</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+{% endfor %}
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
