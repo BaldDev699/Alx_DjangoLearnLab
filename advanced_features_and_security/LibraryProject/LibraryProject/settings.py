@@ -27,6 +27,25 @@ DEBUG = False
 
 ALLOWED_HOSTS = []
 
+# Help prevent XSS attacks
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevent the browser from guessing content types
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent content type sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Use HTTPS for all connections
+CSRF_COOKIE_SECURE = True
+
+# Use secure cookies
+SESSION_COOKIE_SECURE = True
+
+# Make cookies HttpOnly to prevent JavaScript access
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+
 
 # Application definition
 
