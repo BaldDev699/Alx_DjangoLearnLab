@@ -37,3 +37,39 @@ user.groups.add(librarians)
 - Make sure to create the permissions and groups either via migrations, admin, or Django shell.
 - Always use the variable names as defined above (e.g., `can_edit`, `can_create`).
 - Refer to Django documentation for advanced permission and group management.
+
+
+# Changes made to secure the application
+
+This Django project is configured for production security as follows:
+
+1. **HTTPS Enforcement**
+   - `SECURE_SSL_REDIRECT = True`: All HTTP requests are redirected to HTTPS.
+   - `CSRF_COOKIE_SECURE = True` and `SESSION_COOKIE_SECURE = True`: Cookies are only sent over HTTPS.
+
+2. **Cookie Security**
+   - `CSRF_COOKIE_HTTPONLY = True` and `SESSION_COOKIE_HTTPONLY = True`: Cookies are inaccessible to JavaScript.
+
+3. **HSTS (HTTP Strict Transport Security)**
+   - `SECURE_HSTS_SECONDS = 31536000`: Enforces HTTPS for 1 year.
+   - `SECURE_HSTS_INCLUDE_SUBDOMAINS = True`: Applies HSTS to all subdomains.
+   - `SECURE_HSTS_PRELOAD = True`: Allows site to be included in browser preload lists.
+
+4. **XSS and Content-Type Protections**
+   - `SECURE_BROWSER_XSS_FILTER = True`: Enables browser XSS filter.
+   - `SECURE_CONTENT_TYPE_NOSNIFF = True`: Prevents content type sniffing.
+   - `X_FRAME_OPTIONS = 'DENY'`: Prevents clickjacking by denying framing.
+
+5. **Password Validation**
+   - Multiple validators are enabled to enforce strong passwords.
+
+6. **Debug Mode**
+   - `DEBUG = False`: Debug mode is disabled for production.
+
+7. **Allowed Hosts**
+   - `ALLOWED_HOSTS` should be set to your domain(s) in production.
+
+> Review and update `ALLOWED_HOSTS` and `SECRET_KEY` before deploying to production.
+
+For more details, see Django's official security documentation:
+https://docs.djangoproject.com/en/5.2/topics/security/
