@@ -1,9 +1,11 @@
 from django.test import APITestCase
 from .models import Book
 from rest_framework import status
+from django.contrib.auth.models import User
 
 class BookModelTest(APITestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
         self.book = Book.objects.create(
             title="Test Book",
             author="Test Author",
@@ -34,6 +36,8 @@ class BookModelTest(APITestCase):
         self.assertEqual(response.data['title'], "Test Book")
 
     def test_book_update(self):
+        self.client.login(username='testuser', password='testpass')
+        response = self.client.get(self.detail_url, format='json')
         data = {
             "title": "Updated Book",
             "author": "Updated Author",
