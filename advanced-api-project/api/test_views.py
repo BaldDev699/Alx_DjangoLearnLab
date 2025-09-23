@@ -1,7 +1,7 @@
-from django.test import TestCase
+from django.test import APITestCase
 from .models import Book
 
-class BookModelTest(TestCase):
+class BookModelTest(APITestCase):
     def setUp(self):
         Book.objects.create(title="Test Book", author="Author A", published_year=2020)
 
