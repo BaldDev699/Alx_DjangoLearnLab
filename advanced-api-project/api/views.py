@@ -11,6 +11,13 @@ class ListView(generics.ListAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        author = self.request.query_params.get('author', None)
+        if author is not None:
+            queryset = queryset.filter(author__icontains=author)
+        return queryset
+
 # Detail view for a single book
 class DetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
