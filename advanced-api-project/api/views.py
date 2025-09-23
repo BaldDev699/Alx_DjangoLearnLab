@@ -1,9 +1,7 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, IsAuthenticated, IsAuthenticatedOrReadOnly
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 # Create your views here.
 class ListView(generics.ListAPIView):
