@@ -13,6 +13,8 @@ class ListView(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [rest_framework.DjangoFilterBackend]
     filterset_fields = ['title', 'author', 'published_year']
+    filter_backends = [rest_framework.OrderingFilter]
+    ordering_fields = ['title', 'publication_year']
 
 
 # Detail view for a single book
