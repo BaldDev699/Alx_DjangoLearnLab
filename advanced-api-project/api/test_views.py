@@ -1,5 +1,6 @@
 from django.test import APITestCase
 from .models import Book
+from rest_framework import status
 
 class BookModelTest(APITestCase):
     def setUp(self):
