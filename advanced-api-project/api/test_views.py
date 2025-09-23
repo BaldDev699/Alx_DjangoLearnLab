@@ -3,22 +3,47 @@ from .models import Book
 
 class BookModelTest(APITestCase):
     def setUp(self):
-        Book.objects.create(title="Test Book", author="Author A", published_year=2020)
-
+        self.book = Book.objects.create(
+            title="Test Book",
+            author="Test Author",
+            published_year=2023
+        )
+        self.list_url = '/api/books/list/'
+        self.detail_url = f'/api/books/{self.book.id}/detail/'
+    
     def test_book_creation(self):
-        book = Book.objects.get(title="Test Book")
-        self.assertEqual(book.author, "Author A")
-        self.assertEqual(book.published_year, 2020)
+        data = {
+            "title": "New Book",
+            "author": "New Author",
+            "published_year": 2024
+        }
+        response = self.client.post('/api/books/create/', data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(Book.objects.count(), 2)
+        self.assertEqual(Book.objects.get(id=response.data['id']).title, "New Book")
+    
+    def test_book_list(self):
+        response = self.client.get(self.list_url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_book_detail(self):
+        response = self.client.get(self.detail_url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['title'], "Test Book")
 
     def test_book_update(self):
-        book = Book.objects.get(title="Test Book")
-        book.author = "Author B"
-        book.save()
-        updated_book = Book.objects.get(title="Test Book")
-        self.assertEqual(updated_book.author, "Author B")
+        data = {
+            "title": "Updated Book",
+            "author": "Updated Author",
+            "published_year": 2025
+        }
+        response = self.client.put(f'/api/books/update/?id={self.book.id}', data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.book.refresh_from_db()
+        self.assertEqual(self.book.title, "Updated Book")   
 
-    def test_book_deletion(self):
-        book = Book.objects.get(title="Test Book")
-        book.delete()
-        books = Book.objects.all()
-        self.assertEqual(len(books), 0)
+    def test_book_delete(self):
+        response = self.client.delete(f'/api/books/delete/?id={self.book.id}', format='json')
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Book.objects.count(), 0)
