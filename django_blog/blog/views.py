@@ -1,5 +1,6 @@
-from pyexpat.errors import messages
-from django.shortcuts import render, redirect
+from django.contrib import messages
+from urllib import request
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from.forms import UserCreationForm
 from .models import Post
@@ -46,3 +47,45 @@ def user_profile(request):
             messages.success(request, 'Email updated successfully.')
             return redirect('user_profile')
     return render(request, 'blog/user_profile.html')
+
+def ListView(request):
+    posts = Post.objects.all().order_by('-published_date')
+    return render(request, 'blog/list.html', {'posts': posts})
+
+def DetailView(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    return render(request, 'blog/detail.html', {'post': post})
+
+@login_required
+def CreateView(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+        Post.objects.create(
+            title=title,
+            content=content,
+            author=request.user
+        )
+        return redirect("post_list")
+    return render(request, "blog/create.html")
+
+@login_required
+def UpdateView(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        if title and content:
+            post.title = title
+            post.content = content
+            post.save()
+            return redirect('post_detail', pk=post.id)
+    return render(request, 'blog/update.html', {'post': post})
+
+@login_required
+def DeleteView(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('post_list')
+    return render(request, 'blog/delete.html', {'post': post})
