@@ -2,10 +2,12 @@ from django.contrib import messages
 from urllib import request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
-from.forms import UserCreationForm
+from django.urls import reverse_lazy
+from.forms import UserCreationForm, PostForm
 from .models import Post
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 # Create your views here.
 def register(request):
@@ -49,44 +51,44 @@ def user_profile(request):
             return redirect('user_profile')
     return render(request, 'blog/user_profile.html')
 
-def ListView(request):
-    posts = Post.objects.all().order_by('-published_date')
-    return render(request, 'blog/list.html', {'posts': posts})
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']
 
-def DetailView(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/detail.html', {'post': post})
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+    context_object_name = 'post'
 
-@login_required
-def CreateView(request):
-    if request.method == "POST":
-        title = request.POST.get("title")
-        content = request.POST.get("content")
-        Post.objects.create(
-            title=title,
-            content=content,
-            author=request.user
-        )
-        return redirect("post_list")
-    return render(request, "blog/create.html")
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
 
-@login_required
-def UpdateView(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        if title and content:
-            post.title = title
-            post.content = content
-            post.save()
-            return redirect('post_detail', pk=post.id)
-    return render(request, 'blog/update.html', {'post': post})
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-@login_required
-def DeleteView(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if request.method == 'POST':
-        post.delete()
-        return redirect('post_list')
-    return render(request, 'blog/delete.html', {'post': post})
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('post_list')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
