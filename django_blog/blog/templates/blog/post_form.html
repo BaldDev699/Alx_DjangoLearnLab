@@ -1,21 +1,85 @@
-{% extends "base.html" %}
-{% block content %}
-  <div class="form-container">
-    <h1>{% if form.instance.pk %}Edit Post{% else %}Create Post{% endif %}</h1>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-      <div class="form-group">
-        {{ form.title.label_tag }}
-        {{ form.title }}
-        {{ form.title.errors }}
-      </div>
-      <div class="form-group">
-        {{ form.content.label_tag }}
-        {{ form.content }}
-        {{ form.content.errors }}
-      </div>
-      <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
-    </form>
-  </div>
-{% endblock %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if form.instance.pk %}Update Post{% else %}Create Post{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>{% if form.instance.pk %}Update Post{% else %}Create a New Post{% endif %}</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">
+                {% if form.instance.pk %}Update Post{% else %}Create Post{% endif %}
+            </button>
+        </form>
+    </div>
+</body>
+</html>
