@@ -145,7 +145,7 @@ def post_search(request):
         ).distinct()
     return render(request, 'blog/post_search.html', {'results': results, 'query': query})
 
-def posts_by_tag(request, tag_name):
-    tag = get_object_or_404(Tag, name=tag_name)
-    posts = Post.objects.filter(tags__name=tag.name)
+def posts_by_tag(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    posts = Post.objects.filter(tags__slug=tag.slug)
     return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag})
