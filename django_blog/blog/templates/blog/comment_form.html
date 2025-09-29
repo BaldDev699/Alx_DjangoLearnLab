@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comment</title>
+    <title>{% if form.instance.pk %}Edit Comment{% else %}Create a Comment{% endif %}</title>
 </head>
 <body>
-    <h1>Create a Comment</h1>
+    <h1>{% if form.instance.pk %}Edit Comment{% else %}Create a Comment{% endif %}</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Submit</button>
+        <button type="submit">{% if form.instance.pk %}Save Changes{% else %}Submit{% endif %}</button>
     </form>
 </body>
 </html>

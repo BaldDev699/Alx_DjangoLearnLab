@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,9 +62,40 @@
             color: white;
         }
 
+        .comments {
+            margin-top: 40px;
+        }
+
+        .comment {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .comment small {
+            color: #777;
+            font-size: 12px;
+        }
+
+        .comment-actions {
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        .comment-actions a {
+            margin-right: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .comment-actions a:hover {
+            text-decoration: underline;
+        }
+
         a.back-link {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 30px;
             text-decoration: none;
             background: #007bff;
             color: white;
@@ -97,6 +127,27 @@
             {% endfor %}
         </div>
         {% endif %}
+
+        <!-- Comments Section -->
+        <div class="comments">
+            <h2>Comments</h2>
+            {% for comment in post.comments.all %}
+                <div class="comment">
+                    <p>{{ comment.content }}</p>
+                    <small>By {{ comment.author.username }} on {{ comment.created_at }}</small>
+                    {% if user == comment.author %}
+                        <div class="comment-actions">
+                            <a href="{% url 'comment_update' comment.pk %}">Edit</a>
+                            <a href="{% url 'comment_delete' comment.pk %}">Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No comments yet. Be the first to comment!</p>
+            {% endfor %}
+
+            <a href="{% url 'add_comment' post.pk %}" class="back-link">+ Add a Comment</a>
+        </div>
 
         <a href="{% url 'post_list' %}" class="back-link">← Back to Posts</a>
     </div>
