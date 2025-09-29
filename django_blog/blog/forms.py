@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from taggit.forms import TagWidget
 
 from blog.models import Comment, Post
 
@@ -16,7 +17,9 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ["title", "content", "tags"]
         widgets = {
-            'tags': forms.CheckboxSelectMultiple(),
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "content": forms.Textarea(attrs={"class": "form-control"}),
+            "tags": TagWidget(attrs={"class": "form-control"}),
         }
 
 class CommentForm(forms.ModelForm):
