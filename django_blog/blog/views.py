@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-# Create your views here.
+# User Registration View
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -23,6 +23,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'blog/register.html', {'form': form})
 
+# User Login View
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -36,12 +37,14 @@ def login_view(request):
             messages.error(request, 'Invalid username or password.')
     return render(request, 'blog/login.html')
 
+# User Logout View
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect('login')
     return render(request, 'blog/logout.html')
 
+# User Profile View
 @login_required
 def user_profile(request):
     if request.method == 'POST':
@@ -53,17 +56,20 @@ def user_profile(request):
             return redirect('user_profile')
     return render(request, 'blog/user_profile.html')
 
+# Blog Post Views
 class PostListView(ListView):
     model = Post
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'
     ordering = ['-published_date']
 
+# Detail View for a single post
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
+# Create, Update, Delete Views for Posts and Comments
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
@@ -135,7 +141,8 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post_detail', kwargs={'pk': self.object.post.pk})
-    
+
+# Search and Tag Views
 def post_search(request):
     query = request.GET.get('q')
     results = []
