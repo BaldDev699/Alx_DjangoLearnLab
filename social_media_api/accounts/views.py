@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status, views, permissions
 from .models import CustomUser
-from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, ProfileSerializer, FollowSerializer, SimpleUserSerializer
+from .serializers import RegisterSerializer, LoginSerializer, UserSerializer, ProfileSerializer, FollowSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -54,7 +54,7 @@ class UnfollowUserView(views.APIView):
 
 class MyFollowingListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = SimpleUserSerializer
+    serializer_class = ProfileSerializer
 
     def get_queryset(self):
         return self.request.user.following.all()
@@ -62,7 +62,7 @@ class MyFollowingListView(generics.ListAPIView):
 
 class MyFollowersListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = SimpleUserSerializer
+    serializer_class = ProfileSerializer
 
     def get_queryset(self):
         return self.request.user.followers.all()
