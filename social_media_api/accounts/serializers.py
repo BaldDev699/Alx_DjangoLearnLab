@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser
-from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
 class UserSerializer(serializers.ModelSerializer):
@@ -32,8 +32,9 @@ class LoginSerializer(serializers.Serializer):
     token = serializers.CharField(read_only=True)
 
     def validate(self, data):
-        user = authenticate(**data)
-        if user and user.is_active:
+        User = get_user_model()
+        user = User.objects.filter(username=data['username']).first()
+        if user and user.check_password(data['password']):
             token, created = Token.objects.get_or_create(user=user)
             return {
                 'username': user.username,
