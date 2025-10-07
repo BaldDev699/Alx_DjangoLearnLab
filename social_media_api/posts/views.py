@@ -91,7 +91,7 @@ class UnlikePostView(views.APIView):
     def post(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)
         user = request.user
-        like = Like.objects.filter(user=user, post=post).first()
+        like = Like.objects.get_or_create(user=user, post=post)[0]
 
         if not like:
             return Response({"detail": "You haven't liked this post."}, status=status.HTTP_400_BAD_REQUEST)
